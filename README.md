@@ -202,7 +202,7 @@ Reimbursements should be ordered by date
 * **Method:**
   `POST`
 
-* **Rquest:**
+* **Request:**
   The reimbursementId should be 0
   ```javascript
   Reimbursement
