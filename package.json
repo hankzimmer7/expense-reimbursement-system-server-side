@@ -21,6 +21,9 @@
     "url": "https://github.com/1901-blake/project0-ers-api-hankzimmer7/issues"
   },
   "homepage": "https://github.com/1901-blake/project0-ers-api-hankzimmer7#readme",
+  "engines": {
+    "node": "8.11.2"
+  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
