@@ -5,7 +5,7 @@ import { authRouter } from './routers/auth.router';
 import { userRouter } from './routers/user.router';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Set up body parser to convert json body to js object and attach to req
 app.use(bodyParser.json());
