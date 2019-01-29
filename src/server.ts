@@ -1,8 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import { authRouter } from './routers/auth.router';
-import { userRouter } from './routers/user.router';
+const routes = require('./routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,12 +25,8 @@ const sess = {
 };
 app.use(session(sess));
 
-// Routes
-app.use('/auth', authRouter);
-app.use('/users', userRouter);
-app.get('/', (req, res) => {
-  res.send('site is online');
-});
+// Add routes, both API and view
+app.use(routes);
 
 // Listen on the port
 app.listen(PORT);

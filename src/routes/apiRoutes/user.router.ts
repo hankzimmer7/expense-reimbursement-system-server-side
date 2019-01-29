@@ -1,7 +1,7 @@
 import express from 'express';
-import { User } from '../models/user';
-import { authMiddleware } from '../middleware/auth.middleware';
-import { users } from '../data';
+import { User } from '../../models/user';
+import { authMiddleware } from '../../middleware/auth.middleware';
+import { users } from '../../data';
 
 // const peter = new User(1, 'peter', 'password', 'peter',);
 // const kyle = new User(2, 'kyle', 'password', 'kyle');
