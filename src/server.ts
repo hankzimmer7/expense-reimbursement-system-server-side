@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 const routes = require('./routes');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,8 +26,11 @@ const sess = {
 };
 app.use(session(sess));
 
-// Add routes, both API and view
+// Add API routes
 app.use(routes);
+
+// Serve html, css, and js
+app.use(express.static(path.join(__dirname, '../client/public')));
 
 // Listen on the port
 app.listen(PORT);
