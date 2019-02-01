@@ -10,7 +10,7 @@ The User model keeps track of users information.
 ```javascript
 {
   userId: number, // primary key
-	username: string, // not null,  unique
+	username: string, // not null, unique
 	password: string, // not null
 	firstName: string, // not null
 	lastName: string, // not null
