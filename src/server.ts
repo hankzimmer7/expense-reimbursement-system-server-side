@@ -5,8 +5,8 @@ const routes = require('./routes');
 const path = require('path');
 
 const app = express();
-// const PORT = process.env.PORT || 3005;
-const PORT = 3000;
+const PORT = process.env.PORT || 3005;
+// const PORT = 3000;
 
 // Set up body parser to convert json body to js object and attach to req
 app.use(bodyParser.json());
