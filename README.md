@@ -149,7 +149,7 @@ The ReimbursementType model is used to track what kind of reimbursement is being
 * **Allowed Roles** `admin`
 
 * **Request**
-  The userId must be presen as well as all fields to update, any field left undefined will not be updated.
+  The userId must be present as well as all fields to update, any field left undefined will not be updated.
   ```javascript
     User
   ```
@@ -219,7 +219,7 @@ Reimbursements should be ordered by date
 
 ### **Update Reimbursement**  
 * **URL**
-  `/users`
+  `/reimbursements`
 
 * **Method:**
   `PATCH`

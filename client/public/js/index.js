@@ -28,7 +28,7 @@ let login = () => {
         "password": passwordInput
     }
     console.log('User:', user);
-    axios.post('/auth/login', user)
+    axios.post('/login', user)
         .then((data) => {
             console.log('data', data);
         });

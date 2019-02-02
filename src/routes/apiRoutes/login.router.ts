@@ -1,8 +1,8 @@
 import express from 'express';
 
-export const authRouter = express.Router();
+export const loginRouter = express.Router();
 
-authRouter.post('/login', (req, res) => {
+loginRouter.post('/', (req, res) => {
   if (req.body.username === 'hank' && req.body.password === 'password') {
     const user = {
       username: req.body.username,
@@ -13,7 +13,7 @@ authRouter.post('/login', (req, res) => {
   } else if (req.body.username === 'dana' && req.body.password === 'password') {
     const user = {
       username: req.body.username,
-      role: 'general'
+      role: 'user'
     };
     req.session.user = user;
     res.json(user);
@@ -23,6 +23,6 @@ authRouter.post('/login', (req, res) => {
 });
 
 
-authRouter.get('/info', (req, res) => {
+loginRouter.get('/info', (req, res) => {
   res.json(req.session.user);
 });

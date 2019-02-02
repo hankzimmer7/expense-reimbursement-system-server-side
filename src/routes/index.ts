@@ -1,10 +1,10 @@
 const path = require('path');
 const router = require('express').Router();
-import { authRouter } from './apiRoutes/auth.router';
+import { loginRouter } from './apiRoutes/login.router';
 import { userRouter } from './apiRoutes/user.router';
 
 // API Routes
-router.use('/auth', authRouter);
+router.use('/login', loginRouter);
 router.use('/users', userRouter);
 
 // If no API routes are hit, send index.html
