@@ -6,5 +6,8 @@ export const connectionPool = new Pool({
   database: process.env.aws_db_name,
   password: process.env.aws_db_password,
   port: 5432,
-  max: 5
+  max: 5,
+
+  // For heroku connection
+  connectionString: process.env.DATABASE_URL,
 });
