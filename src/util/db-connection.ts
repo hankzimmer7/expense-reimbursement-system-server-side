@@ -1,10 +1,10 @@
 import { Pool } from 'pg';
 
 export const connectionPool = new Pool({
-  user: process.env.aws_db_user,
-  host: process.env.aws_db_host,
-  database: process.env.aws_db_name,
-  password: process.env.aws_db_password,
+  user: process.env.AWS_DB_USER,
+  host: process.env.AWS_DB_HOST,
+  database: process.env.AWS_DB_NAME,
+  password: process.env.AWS_DB_PASSWORD,
   port: 5432,
   max: 5,
 
