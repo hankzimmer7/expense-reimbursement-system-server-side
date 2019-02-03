@@ -8,6 +8,6 @@ export const connectionPool = new Pool({
   port: 5432,
   max: 5,
 
-  // For heroku connection
+  // For Heroku connection
   connectionString: process.env.DATABASE_URL,
 });
