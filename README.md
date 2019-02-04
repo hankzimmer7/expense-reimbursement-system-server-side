@@ -6,7 +6,7 @@ The Expense Reimbursement System (ERS) will manage the process of reimbursing em
 # Models
 
 **User**  
-The User model keeps track of users information.
+The User model keeps track of users information. 
 ```javascript
 {
   userId: number, // primary key
