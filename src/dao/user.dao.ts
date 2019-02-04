@@ -3,7 +3,7 @@ import { connectionPool } from '../util/db-connection';
 
 // Find all users, with the password field left blank
 export async function findAll(): Promise<User[]> {
-    console.log('Getting all users');
+    console.log('Getting all users from db');
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
