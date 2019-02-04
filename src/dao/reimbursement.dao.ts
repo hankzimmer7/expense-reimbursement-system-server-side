@@ -1,6 +1,7 @@
 import { Reimbursement } from '../models/reimbursement';
 import { connectionPool } from '../util/db-connection';
 
+// Gets all of the reimbursements
 export async function findAll(): Promise<Reimbursement[]> {
     const client = await connectionPool.connect();
     try {
@@ -25,53 +26,143 @@ export async function findAll(): Promise<Reimbursement[]> {
     }
 }
 
-// export async function findById(id: number): Promise<User> {
-//     const client = await connectionPool.connect();
-//     try {
-//         const result = await client.query(
-//             'select * from expense_reimbursement.expense_user where user_id = $1',
-//             [id]
-//         );
-//         const user = result.rows[0];
-//         if (user) {
-//             return {
-//                 userId: user.user_id,
-//                 username: user.username,
-//                 password: '',
-//                 firstName: user.first_name,
-//                 lastName: user.last_name,
-//                 email: user.email,
-//                 role: user.role
-//             };
-//         } else {
-//             return undefined;
-//         }
-//     } finally {
-//         client.release();
-//     }
-// }
+// Gets all of the reimbursements with a given status and sorts by date
+export async function findByStatus(statusId: number): Promise<Reimbursement[]> {
+    const client = await connectionPool.connect();
+    try {
+        const result = await client.query(
+            'select * from expense_reimbursement.reimbursement where status = $1 order by date_submitted',
+            [statusId]
+        );
+        return result.rows.map(reimbursement => {
+            return {
+                reimbursementId: reimbursement.reimbursement_id,
+                author: reimbursement.author,
+                amount: reimbursement.amount,
+                dateSubmitted: reimbursement.date_submitted,
+                dateResolved: reimbursement.date_resolved,
+                description: reimbursement.description,
+                resolver: reimbursement.resolver,
+                status: reimbursement.status,
+                type: reimbursement.type
+            };
+        });
+    } finally {
+        client.release();
+    }
+}
 
-// export async function save(user: User): Promise<User> {
-//     const client = await connectionPool.connect();
-//     try {
-//         const result = await client.query(
-//             `insert into users (username, password, firstName, lastName, email, role)
-//         values  ($1, $2, $3, $4, $5, $6)
-//         returning user_id`,
-//             [user.username, user.password, user.firstName, user.lastName, user.email, user.role]
-//         );
-//         if (result.rows[0]) {
-//             const id = result.rows[0].user_id;
-//             return {
-//                 ...user,
-//                 userId: id
-//             };
-//         } else {
-//             return undefined;
-//         }
+// Gets all of the reimbursements for a given user and sorts by date
+export async function findByUser(userId: number): Promise<Reimbursement[]> {
+    const client = await connectionPool.connect();
+    try {
+        const result = await client.query(
+            'select * from expense_reimbursement.reimbursement where author = $1 order by date_submitted',
+            [userId]
+        );
+        return result.rows.map(reimbursement => {
+            return {
+                reimbursementId: reimbursement.reimbursement_id,
+                author: reimbursement.author,
+                amount: reimbursement.amount,
+                dateSubmitted: reimbursement.date_submitted,
+                dateResolved: reimbursement.date_resolved,
+                description: reimbursement.description,
+                resolver: reimbursement.resolver,
+                status: reimbursement.status,
+                type: reimbursement.type
+            };
+        });
+    } finally {
+        client.release();
+    }
+}
 
-//     } finally {
-//         client.release();
-//     }
-// }
+// Get a reimbursement by its id
+export async function findById(id: number): Promise<Reimbursement> {
+    const client = await connectionPool.connect();
+    try {
+        const result = await client.query(
+            'select * from expense_reimbursement.reimbursement where reimbursement_id = $1',
+            [id]
+        );
+        const reimbursement = result.rows[0];
+        if (reimbursement) {
+            return {
+                reimbursementId: reimbursement.reimbursement_id,
+                author: reimbursement.author,
+                amount: reimbursement.amount,
+                dateSubmitted: reimbursement.date_submitted,
+                dateResolved: reimbursement.date_resolved,
+                description: reimbursement.description,
+                resolver: reimbursement.resolver,
+                status: reimbursement.status,
+                type: reimbursement.type
+            };
+        } else {
+            return undefined;
+        }
+    } finally {
+        client.release();
+    }
+}
 
+// Add a reimbursement to the database
+export async function save(reimbursement: Reimbursement): Promise<Reimbursement> {
+    const client = await connectionPool.connect();
+    try {
+        const currentDate = new Date();
+        const result = await client.query(
+            `insert into expense_reimbursement.reimbursement (author, amount, date_submitted, description, status, type)
+        values  ($1, $2, $3, $4, $5, $6)
+        returning reimbursement_id`,
+            [reimbursement.author, reimbursement.amount, currentDate, reimbursement.description, 1, reimbursement.type]
+        );
+        if (result.rows[0]) {
+            const id = result.rows[0].reimbursement_id;
+            return {
+                ...reimbursement,
+                reimbursementId: id
+            };
+        } else {
+            return undefined;
+        }
+    } finally {
+        client.release();
+    }
+}
+
+// Update a reimbursement
+export async function update(reimbursement: Reimbursement) {
+    const client = await connectionPool.connect();
+    try {
+        // If the status is being updated to approved or denied, add the current date as the date resolved. Otherwise, leaved it null
+        let currentDate = new Date();
+        if (reimbursement.status === (1)) {
+            currentDate = undefined;
+        }
+        const result = await client.query(
+            `update expense_reimbursement.reimbursement set author = $2, amount = $3, date_submitted = $4, date_resolved = $5, description = $6, status = $7, type = $8 where reimbursement_id = $1
+            returning *`,
+            [reimbursement.reimbursementId, reimbursement.author, reimbursement.amount, reimbursement.dateSubmitted, currentDate, reimbursement.description, reimbursement.status, reimbursement.type]
+        );
+        if (result.rows[0]) {
+            const reimbursement = result.rows[0];
+            return ({
+                reimbursementId: reimbursement.reimbursement_id,
+                author: reimbursement.author,
+                amount: reimbursement.amount,
+                dateSubmitted: reimbursement.date_submitted,
+                dateResolved: reimbursement.date_resolved,
+                description: reimbursement.description,
+                resolver: reimbursement.resolver,
+                status: reimbursement.status,
+                type: reimbursement.type
+            });
+        } else {
+            return undefined;
+        }
+    } finally {
+        client.release();
+    }
+}

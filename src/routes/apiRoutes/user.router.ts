@@ -4,6 +4,8 @@ import { authMiddleware } from '../../middleware/auth.middleware';
 
 export const userRouter = express.Router();
 
+// -----------------GET routes----------------------------//
+
 // /users - find all
 userRouter.get('', [
   authMiddleware,
@@ -30,6 +32,8 @@ userRouter.get('/:id', [
     }
   }]);
 
+  // -----------------POST routes----------------------------//
+
 // /users - add a new a user
 userRouter.post('', async (req, res) => {
   try {
@@ -41,6 +45,8 @@ userRouter.post('', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+// -----------------PATCH routes----------------------------//
 
 // /users - update a user
 userRouter.patch('', async (req, res) => {
