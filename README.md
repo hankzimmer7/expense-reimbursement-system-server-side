@@ -227,7 +227,7 @@ Reimbursements should be ordered by date
 * **Allowed Roles** `finance-manager`
 
 * **Request**
-  The reimbursementId must be present as well as all fields to update, any field left undefined will not be updated. This can be used to approve and deny. 
+  The reimbursementId must be present as well as all fields to update, any field left undefined will not be updated. This can be used to approve and deny.
   ```javascript
     Reimbursement
   ```
