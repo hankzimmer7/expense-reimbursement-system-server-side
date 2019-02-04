@@ -1,5 +1,4 @@
 import express from 'express';
-import { User } from '../../models/user';
 import * as UserDao from '../../dao/user.dao';
 import { authMiddleware } from '../../middleware/auth.middleware';
 
@@ -18,11 +17,24 @@ userRouter.get('', [
   }]);
 
 // /users/:id - find by id
-userRouter.get('/:id', async (req, res) => {
-  console.log(req.params);
-  const idParam = +req.params.id;
+userRouter.get('/:id', [
+  authMiddleware,
+  async (req, res) => {
+    const idParam = +req.params.id;
+    try {
+      const user = await UserDao.findById(idParam);
+      res.json(user);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  }]);
+
+// /users - add a new a user
+userRouter.post('', async (req, res) => {
   try {
-    const user = await UserDao.findById(idParam);
+    const user = await UserDao.save(req.body);
+    res.status(200);
     res.json(user);
   } catch (err) {
     console.log(err);
@@ -30,8 +42,14 @@ userRouter.get('/:id', async (req, res) => {
   }
 });
 
-// userRouter.post('', (req, res) => {
-//   users.push(req.body);
-//   res.sendStatus(201);
-// });
-
+// /users - update a user
+userRouter.patch('', async (req, res) => {
+  try {
+    const user = await UserDao.update(req.body);
+    res.status(200);
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});

@@ -1,4 +1,3 @@
-// const path = require('path');
 const router = require('express').Router();
 import { loginRouter } from './apiRoutes/login.router';
 import { logoutRouter } from './apiRoutes/logout.router';
@@ -10,11 +9,5 @@ router.use('/login', loginRouter);
 router.use('/logout', logoutRouter);
 router.use('/users', userRouter);
 router.use('/reimbursements', reimbursementRouter);
-
-// If no API routes are hit, send index.html
-// router.use(function (req, res) {
-//     res.sendFile(path.join(__dirname, '../../client/public/index.html'));
-// });
-
 
 module.exports = router;
