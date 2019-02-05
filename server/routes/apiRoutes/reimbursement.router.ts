@@ -1,7 +1,7 @@
 import express from 'express';
 import { Reimbursement } from '../../models/reimbursement';
 import * as ReimbursementDao from '../../dao/reimbursement.dao';
-import { authMiddleware } from '../../middleware/auth.middleware';
+import { authManagerMiddleware } from '../../middleware/auth.manager.middleware';
 
 export const reimbursementRouter = express.Router();
 
@@ -9,7 +9,7 @@ export const reimbursementRouter = express.Router();
 
 // /reimbursements - find all
 reimbursementRouter.get('', [
-  authMiddleware,
+  authManagerMiddleware,
   async (req, res) => {
     try {
       const reimbursements = await ReimbursementDao.findAll();
@@ -21,7 +21,7 @@ reimbursementRouter.get('', [
 
 // /reimbursements/status/:statusId - find by status
 reimbursementRouter.get('/status/:statusId', [
-  authMiddleware,
+  authManagerMiddleware,
   async (req, res) => {
     const statusId = +req.params.statusId;
     try {
@@ -32,9 +32,9 @@ reimbursementRouter.get('/status/:statusId', [
     }
   }]);
 
-  // /reimbursements/author/userId/:userId - find by user
+// /reimbursements/author/userId/:userId - find by user
 reimbursementRouter.get('/author/userId/:userId', [
-  authMiddleware,
+  authManagerMiddleware,
   async (req, res) => {
     const userId = +req.params.userId;
     try {
@@ -47,7 +47,7 @@ reimbursementRouter.get('/author/userId/:userId', [
 
 // /reimbursements/:id - find by id
 reimbursementRouter.get('/:id', [
-
+  authManagerMiddleware,
   async (req, res) => {
     console.log(req.params);
     const idParam = +req.params.id;
@@ -78,13 +78,15 @@ reimbursementRouter.post('', async (req, res) => {
 // -----------------PATCH routes----------------------------//
 
 // /reimbursements - update a reimbursement
-reimbursementRouter.patch('', async (req, res) => {
-  try {
-    const reimbursement = await ReimbursementDao.update(req.body);
-    res.status(200);
-    res.json(reimbursement);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-});
+reimbursementRouter.patch('', [
+  authManagerMiddleware,
+  async (req, res) => {
+    try {
+      const reimbursement = await ReimbursementDao.update(req.body);
+      res.status(200);
+      res.json(reimbursement);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  }]);

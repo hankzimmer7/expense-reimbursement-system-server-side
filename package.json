@@ -2,10 +2,10 @@
   "name": "project0-ers-api-hankzimmer7",
   "version": "1.0.0",
   "description": "Expense reimbursement system api",
-  "main": "src/index.js",
+  "main": "server/index.ts",
   "scripts": {
-    "deploy": "ts-node src/server.ts",
-    "start": "nodemon --exec ts-node src/server.ts",
+    "deploy": "ts-node server/index.ts",
+    "start": "nodemon --exec ts-node server/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tslint src/**/*.ts",
     "lint:fix": "tslint src/**/*.ts --fix",
