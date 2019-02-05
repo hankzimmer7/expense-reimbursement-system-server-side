@@ -78,6 +78,33 @@ export async function findById(id: number): Promise<User> {
     }
 }
 
+// Find a user based on the provided id and don't join. This is used when updating users and maintaining fields that weren't given
+export async function findByIdNoJoin(id: number): Promise<User> {
+    const client = await connectionPool.connect();
+    try {
+        const result = await client.query(
+            `select * from expense_reimbursement.expense_user where user_id = $1;`,
+            [id]
+        );
+        const user = result.rows[0];
+        if (user) {
+            return {
+                userId: user.user_id,
+                username: user.username,
+                password: '',
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+                role: user.expense_role
+            };
+        } else {
+            return undefined;
+        }
+    } finally {
+        client.release();
+    }
+}
+
 // Add a user to the database
 export async function save(user: User): Promise<User> {
     const client = await connectionPool.connect();
@@ -107,11 +134,22 @@ export async function save(user: User): Promise<User> {
 export async function update(user: User) {
     const client = await connectionPool.connect();
     try {
+        // Get the user's current info before updating
+        const userToUpdate = await findByIdNoJoin(user.userId);
+        // If a field was not provided to update, keep the old info
+        if (!user.username) {user.username = userToUpdate.username; }
+        if (!user.password) {user.password = userToUpdate.password; }
+        if (!user.firstName) {user.firstName = userToUpdate.firstName; }
+        if (!user.lastName) {user.lastName = userToUpdate.lastName; }
+        if (!user.email) {user.email = userToUpdate.email; }
+        if (!user.role) {user.role = userToUpdate.role; }
+        // Update the user
         const result = await client.query(
             `update expense_reimbursement.expense_user set username = $2, password = $3, first_name = $4, last_name = $5, email = $6, expense_role = $7 where user_id = $1
             returning *`,
             [user.userId, user.username, user.password, user.firstName, user.lastName, user.email, user.role]
         );
+        // Return the updated user
         if (result.rows[0]) {
             const user = result.rows[0];
             return ({

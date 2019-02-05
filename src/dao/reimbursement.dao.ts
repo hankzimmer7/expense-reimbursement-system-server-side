@@ -126,6 +126,35 @@ export async function findById(id: number): Promise<Reimbursement> {
     }
 }
 
+// Get a reimbursement by its id and don't join the foreign keys. This is used for updating a reimbursement
+export async function findByIdNoJoin(id: number): Promise<Reimbursement> {
+    const client = await connectionPool.connect();
+    try {
+        const result = await client.query(
+            `select * from expense_reimbursement.reimbursement where reimbursement_id = $1;`,
+            [id]
+        );
+        const reimbursement = result.rows[0];
+        if (reimbursement) {
+            return {
+                reimbursementId: reimbursement.reimbursement_id,
+                author: reimbursement.author,
+                amount: reimbursement.amount,
+                dateSubmitted: reimbursement.date_submitted,
+                dateResolved: reimbursement.date_resolved,
+                description: reimbursement.description,
+                resolver: reimbursement.resolver,
+                status: reimbursement.status,
+                type: reimbursement.type
+            };
+        } else {
+            return undefined;
+        }
+    } finally {
+        client.release();
+    }
+}
+
 // Add a reimbursement to the database
 export async function save(reimbursement: Reimbursement): Promise<Reimbursement> {
     const client = await connectionPool.connect();
@@ -155,15 +184,24 @@ export async function save(reimbursement: Reimbursement): Promise<Reimbursement>
 export async function update(reimbursement: Reimbursement) {
     const client = await connectionPool.connect();
     try {
-        // If the status is being updated to approved or denied, add the current date as the date resolved. Otherwise, leaved it null
-        let currentDate = new Date();
-        if (reimbursement.status === (1)) {
-            currentDate = undefined;
+        // Get the reimbursement's current info ebfore updating
+        const reimbursementToUpdate = await findByIdNoJoin(reimbursement.reimbursementId);
+        // If a field was not provided to update, keep the old info
+        if (!reimbursement.author) {reimbursement.author = reimbursementToUpdate.author; }
+        if (!reimbursement.amount) {reimbursement.amount = reimbursementToUpdate.amount; }
+        if (!reimbursement.dateResolved) {reimbursement.dateResolved = reimbursementToUpdate.dateResolved; }
+        if (!reimbursement.description) {reimbursement.description = reimbursementToUpdate.description; }
+        if (!reimbursement.status) {reimbursement.status = reimbursementToUpdate.status; }
+        if (!reimbursement.type) {reimbursement.type = reimbursementToUpdate.type; }
+        // If the status is being updated to approved or denied, add the current date as the date resolved.
+        const currentDate = new Date();
+        if (reimbursement.status != 1) {
+            reimbursement.dateResolved = currentDate;
         }
         const result = await client.query(
-            `update expense_reimbursement.reimbursement set author = $2, amount = $3, date_submitted = $4, date_resolved = $5, description = $6, status = $7, type = $8 where reimbursement_id = $1
+            `update expense_reimbursement.reimbursement set author = $2, amount = $3, date_resolved = $4, description = $5, status = $6, type = $7 where reimbursement_id = $1
             returning *`,
-            [reimbursement.reimbursementId, reimbursement.author, reimbursement.amount, reimbursement.dateSubmitted, currentDate, reimbursement.description, reimbursement.status, reimbursement.type]
+            [reimbursement.reimbursementId, reimbursement.author, reimbursement.amount, reimbursement.dateResolved, reimbursement.description, reimbursement.status, reimbursement.type]
         );
         if (result.rows[0]) {
             const reimbursement = result.rows[0];
