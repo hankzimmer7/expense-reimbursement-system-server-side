@@ -55,7 +55,8 @@ export async function findById(id: number): Promise<User> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            'select * from expense_reimbursement.expense_user where user_id = $1',
+            `select user_id, username, password, first_name, last_name, email, expense_reimbursement.expense_role.expense_role from expense_reimbursement.expense_user
+            join expense_reimbursement.expense_role on expense_reimbursement.expense_user.expense_role = expense_reimbursement.expense_role.role_id where user_id = $1;`,
             [id]
         );
         const user = result.rows[0];

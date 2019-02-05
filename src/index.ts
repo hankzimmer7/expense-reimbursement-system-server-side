@@ -37,8 +37,6 @@ const sess = {
 };
 app.use(session(sess));
 
-
-
 // Add API routes
 app.use(routes);
 
