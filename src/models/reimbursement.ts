@@ -1,11 +1,11 @@
 export class Reimbursement {
     reimbursementId: number;
-    author: number;
+    author: number | string;
     amount: number;
     dateSubmitted: number;
     dateResolved: number;
     description: string;
-    resolver: number;
+    resolver: number | string;
     status: number;
     type: number;
 
