@@ -1,35 +1,52 @@
 // Start scripts once the document loads
-document.addEventListener("DOMContentLoaded", function (event) {
-    console.log('Scripts loaded');
+document.addEventListener("DOMContentLoaded", () => {
     main();
 });
 
 // Main Function
-let main = () => {
-    
+const main = () => {
     // Login Functionality
     let loginButton = document.getElementById('loginButton');
-    console.log('Login button', loginButton);
-    loginButton.addEventListener('click', function (event) {
+    loginButton.addEventListener('click', () => {
         login();
     })
+
+    // Update the My Reimbursement Link for the current user
+    updateMyReimbursementsLink();
+
 }
 
 // Login Function
-let login = () => {
+const login = () => {
     event.preventDefault();
-    console.log('clicked login button');
     let usernameInput = document.getElementById('usernameInput').value;
-    console.log('Username field:', usernameInput);
     let passwordInput = document.getElementById('passwordInput').value;
-    console.log('Password field:', passwordInput);
     let user = {
         "username": usernameInput,
         "password": passwordInput
     }
-    console.log('User:', user);
+    const loginStatus = document.getElementById('login-status');
     axios.post('/login', user)
         .then((data) => {
-            console.log('data', data);
+            if (data.status === 200) {
+                loginStatus.innerText = `Successfully logged in as ${user.username}!`
+                loginStatus.className = 'green-text';
+                updateMyReimbursementsLink();
+            }
+        })
+        .catch((err) => {
+            console.log("error", err);
+            loginStatus.innerText = "Username or Password incorrect!"
+            loginStatus.className = 'red-text';
         });
+    document.getElementById('passwordInput').value = '';
+}
+
+// Update link to my reimbursements for the current user
+const updateMyReimbursementsLink = () => {
+    let reimbursementsLink = document.getElementById('my-reimbursements-link');
+    axios.get('/login/info')
+    .then((data) => {
+        reimbursementsLink.href = `/reimbursements/author/userId/${data.data.user_id}`;
+    })
 }

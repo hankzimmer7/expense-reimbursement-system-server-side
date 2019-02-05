@@ -31,7 +31,8 @@ export async function findAllWithPasswords(): Promise<User[]> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            'select * from expense_reimbursement.expense_user'
+            `select user_id, username, password, first_name, last_name, email, expense_reimbursement.expense_role.expense_role from expense_reimbursement.expense_user
+            join expense_reimbursement.expense_role on expense_reimbursement.expense_user.expense_role = expense_reimbursement.expense_role.role_id;`
         );
         return result.rows.map(user => {
             return {

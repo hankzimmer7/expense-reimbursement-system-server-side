@@ -17,6 +17,9 @@
   <!-- Axios -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+  <!-- Style -->
+  <link rel="stylesheet" href="./css/style.css">
+
   <!-- Javascript  -->
   <script src="./js/index.js"></script>
 
@@ -35,13 +38,16 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/users"> View Users</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/reimbursements">View Reimbursements</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/login/info">Current User</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users"> All Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="my-reimbursements-link" href="#">My Reimbursements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/reimbursements">All Reimbursements</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/logout">Log Out</a>
@@ -64,6 +70,7 @@
           <label for="passwordInput">Password</label>
           <input type="password" class="form-control" id="passwordInput" placeholder="Type your password here">
         </div>
+        <p id="login-status"></p>
         <button type="submit" class="btn btn-primary" id="loginButton">Log In</button>
       </form>
     </div>

@@ -19,6 +19,7 @@ loginRouter.post('/', (req, res) => {
             passwordCorrect = true;
             console.log(`User ${req.body.username} successfully logged in`);
             const loggedInUser = {
+              user_id: user.userId,
               username: user.username,
               role: user.role
             };

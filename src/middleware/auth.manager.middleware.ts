@@ -1,6 +1,6 @@
 export function authManagerMiddleware(req, res, next) {
     const user = req.session.user;
-    if (user && (user.role === 1 || user.role === 2)) {
+    if (user && (user.role === 'admin' || user.role === 'finance-manager')) {
         next();
     } else {
         res.status(401);

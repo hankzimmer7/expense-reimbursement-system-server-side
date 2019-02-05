@@ -1,7 +1,7 @@
 import express from 'express';
-import { Reimbursement } from '../../models/reimbursement';
 import * as ReimbursementDao from '../../dao/reimbursement.dao';
 import { authManagerMiddleware } from '../../middleware/auth.manager.middleware';
+import { authManagerOrUserMiddleware } from '../../middleware/auth.manager-or-user.middleware';
 
 export const reimbursementRouter = express.Router();
 
@@ -34,7 +34,7 @@ reimbursementRouter.get('/status/:statusId', [
 
 // /reimbursements/author/userId/:userId - find by user
 reimbursementRouter.get('/author/userId/:userId', [
-  authManagerMiddleware,
+  authManagerOrUserMiddleware,
   async (req, res) => {
     const userId = +req.params.userId;
     try {

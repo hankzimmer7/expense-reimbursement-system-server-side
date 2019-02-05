@@ -1,6 +1,6 @@
 export function authAdminMiddleware(req, res, next) {
   const user = req.session.user;
-  if (user && (user.role === 1)) {
+  if (user && (user.role === 'admin')) {
     next();
   } else {
     res.status(401);
