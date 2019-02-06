@@ -55,7 +55,7 @@ export async function findByStatus(statusId: number): Promise<Reimbursement[]> {
                 dateSubmitted: reimbursement.date_submitted,
                 dateResolved: reimbursement.date_resolved,
                 description: reimbursement.description,
-                resolver: reimbursement.resolver,
+                resolver: `${reimbursement.resolver_first_name} ${reimbursement.resolver_last_name}`,
                 status: reimbursement.status,
                 type: reimbursement.type
             };
@@ -88,7 +88,7 @@ export async function findByUser(userId: number): Promise<Reimbursement[]> {
                 dateSubmitted: reimbursement.date_submitted,
                 dateResolved: reimbursement.date_resolved,
                 description: reimbursement.description,
-                resolver: reimbursement.resolver,
+                resolver: `${reimbursement.resolver_first_name} ${reimbursement.resolver_last_name}`,
                 status: reimbursement.status,
                 type: reimbursement.type
             };
@@ -121,7 +121,7 @@ export async function findById(id: number): Promise<Reimbursement> {
                 dateSubmitted: reimbursement.date_submitted,
                 dateResolved: reimbursement.date_resolved,
                 description: reimbursement.description,
-                resolver: reimbursement.resolver,
+                resolver: `${reimbursement.resolver_first_name} ${reimbursement.resolver_last_name}`,
                 status: reimbursement.status,
                 type: reimbursement.type
             };
