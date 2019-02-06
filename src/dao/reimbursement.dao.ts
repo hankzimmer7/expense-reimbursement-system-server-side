@@ -168,10 +168,10 @@ export async function save(reimbursement: Reimbursement): Promise<Reimbursement>
     try {
         const currentDate = new Date();
         const result = await client.query(
-            `insert into expense_reimbursement.reimbursement (author, amount, date_submitted, description, status, type)
-        values  ($1, $2, $3, $4, $5, $6)
+            `insert into expense_reimbursement.reimbursement (author, amount, date_submitted, description, resolver, status, type)
+        values  ($1, $2, $3, $4, $5, $6, $7)
         returning reimbursement_id`,
-            [reimbursement.author, reimbursement.amount, currentDate, reimbursement.description, 1, reimbursement.type]
+            [reimbursement.author, reimbursement.amount, currentDate, reimbursement.description, reimbursement.resolver, 1, reimbursement.type]
         );
         if (result.rows[0]) {
             const id = result.rows[0].reimbursement_id;
@@ -206,9 +206,9 @@ export async function update(reimbursement: Reimbursement) {
             reimbursement.dateResolved = currentDate;
         }
         const result = await client.query(
-            `update expense_reimbursement.reimbursement set author = $2, amount = $3, date_resolved = $4, description = $5, status = $6, type = $7 where reimbursement_id = $1
+            `update expense_reimbursement.reimbursement set author = $2, amount = $3, date_resolved = $4, description = $5, resolver = $6, status = $7, type = $8 where reimbursement_id = $1
             returning *`,
-            [reimbursement.reimbursementId, reimbursement.author, reimbursement.amount, reimbursement.dateResolved, reimbursement.description, reimbursement.status, reimbursement.type]
+            [reimbursement.reimbursementId, reimbursement.author, reimbursement.amount, reimbursement.dateResolved, reimbursement.description, reimbursement.resolver, reimbursement.status, reimbursement.type]
         );
         if (result.rows[0]) {
             const reimbursement = result.rows[0];

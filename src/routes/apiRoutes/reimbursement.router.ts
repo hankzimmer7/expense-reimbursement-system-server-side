@@ -66,6 +66,8 @@ reimbursementRouter.get('/:id', [
 // /reimbursements - add a new a reimbursement
 reimbursementRouter.post('', async (req, res) => {
   try {
+    // Update the resolver to the current user
+    req.body.resolver = req.session.user.user_id;
     const reimbursement = await ReimbursementDao.save(req.body);
     res.status(200);
     res.json(reimbursement);
@@ -82,6 +84,8 @@ reimbursementRouter.patch('', [
   authManagerMiddleware,
   async (req, res) => {
     try {
+      // Update the resolver to the current user
+      req.body.resolver = req.session.user.user_id;
       const reimbursement = await ReimbursementDao.update(req.body);
       res.status(200);
       res.json(reimbursement);
