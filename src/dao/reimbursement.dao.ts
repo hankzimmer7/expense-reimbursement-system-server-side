@@ -6,7 +6,7 @@ export async function findAll(): Promise<Reimbursement[]> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type 
+            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type
             from expense_reimbursement.reimbursement as r
             left join expense_reimbursement.expense_user as user_author on r.author = user_author.user_id
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
@@ -37,7 +37,7 @@ export async function findByStatus(statusId: number): Promise<Reimbursement[]> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type 
+            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type
             from expense_reimbursement.reimbursement as r
             left join expense_reimbursement.expense_user as user_author on r.author = user_author.user_id
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
@@ -50,7 +50,7 @@ export async function findByStatus(statusId: number): Promise<Reimbursement[]> {
         return result.rows.map(reimbursement => {
             return {
                 reimbursementId: reimbursement.reimbursement_id,
-                author: reimbursement.author,
+                author: `${reimbursement.author_first_name} ${reimbursement.author_last_name}`,
                 amount: reimbursement.amount,
                 dateSubmitted: reimbursement.date_submitted,
                 dateResolved: reimbursement.date_resolved,
@@ -83,7 +83,7 @@ export async function findByUser(userId: number): Promise<Reimbursement[]> {
         return result.rows.map(reimbursement => {
             return {
                 reimbursementId: reimbursement.reimbursement_id,
-                author: reimbursement.author,
+                author: `${reimbursement.author_first_name} ${reimbursement.author_last_name}`,
                 amount: reimbursement.amount,
                 dateSubmitted: reimbursement.date_submitted,
                 dateResolved: reimbursement.date_resolved,
@@ -103,7 +103,7 @@ export async function findById(id: number): Promise<Reimbursement> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type 
+            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type
             from expense_reimbursement.reimbursement as r
             left join expense_reimbursement.expense_user as user_author on r.author = user_author.user_id
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
@@ -116,7 +116,7 @@ export async function findById(id: number): Promise<Reimbursement> {
         if (reimbursement) {
             return {
                 reimbursementId: reimbursement.reimbursement_id,
-                author: reimbursement.author,
+                author: `${reimbursement.author_first_name} ${reimbursement.author_last_name}`,
                 amount: reimbursement.amount,
                 dateSubmitted: reimbursement.date_submitted,
                 dateResolved: reimbursement.date_resolved,
