@@ -166,12 +166,13 @@ export async function findByIdNoJoin(id: number): Promise<Reimbursement> {
 export async function save(reimbursement: Reimbursement): Promise<Reimbursement> {
     const client = await connectionPool.connect();
     try {
-        const currentDate = new Date();
+        reimbursement.dateSubmitted = new Date();
+        reimbursement.dateResolved = new Date(1900, 0, 1);
         const result = await client.query(
-            `insert into expense_reimbursement.reimbursement (author, amount, date_submitted, description, resolver, status, type)
-        values  ($1, $2, $3, $4, $5, $6, $7)
+            `insert into expense_reimbursement.reimbursement (author, amount, date_submitted, date_resolved, description, resolver, status, type)
+        values  ($1, $2, $3, $4, $5, $6, $7, $8)
         returning reimbursement_id`,
-            [reimbursement.author, reimbursement.amount, currentDate, reimbursement.description, reimbursement.resolver, 1, reimbursement.type]
+            [reimbursement.author, reimbursement.amount, reimbursement.dateSubmitted, reimbursement.dateResolved, reimbursement.description, reimbursement.resolver, 1, reimbursement.type]
         );
         if (result.rows[0]) {
             const id = result.rows[0].reimbursement_id;

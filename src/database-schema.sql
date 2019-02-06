@@ -28,11 +28,11 @@ create table expense_reimbursement.reimbursement
 	author int not null,
 	amount decimal not null,
 	date_submitted date not null,
-	date_resolved date,
+	date_resolved date not null,
 	description text not null,
 	resolver int,
 	status int not null,
-	type int not null	
+	type int
 );
 
 create table expense_reimbursement.reimbursement_status
@@ -124,8 +124,8 @@ values (6, 45.5, '2018/7/6', '2018/7/10', 'Dinner at Jim''s Steakhouse', 2, 2, 3
 insert into expense_reimbursement.reimbursement (author, amount, date_submitted, date_resolved, description, resolver, status, type)
 values (6, 3680.23, '2018/7/20', '2018/7/25', 'Supplies for trip to Tarsonis', 4, 3, 4);
 insert into expense_reimbursement.reimbursement (author, amount, date_submitted, date_resolved, description, resolver, status, type)
-values (7, 340.09, '2019/1/23', null, 'Dinner meeting with clients on Tarsonis', 1, 1, 3);
+values (7, 340.09, '2019/1/23', '1970/1/1', 'Dinner meeting with clients on Tarsonis', 1, 1, 3);
 insert into expense_reimbursement.reimbursement (author, amount, date_submitted, date_resolved, description, resolver, status, type)
-values (7, 1406.90, '2019/1/26', null, 'Transportation to Mar Sara', 1, 1, 2);
+values (7, 1406.90, '2019/1/26', '1970/1/1', 'Transportation to Mar Sara', 1, 1, 2);
 insert into expense_reimbursement.reimbursement (author, amount, date_submitted, date_resolved, description, resolver, status, type)
 values (8, 530, '2018/5/26', '2018/5/28', 'Parts for fixing ship', 3, 2, 4);

@@ -91,7 +91,7 @@ export async function findByIdNoJoin(id: number): Promise<User> {
             return {
                 userId: user.user_id,
                 username: user.username,
-                password: '',
+                password: user.password,
                 firstName: user.first_name,
                 lastName: user.last_name,
                 email: user.email,
