@@ -39,6 +39,7 @@ const login = () => {
             loginStatus.innerText = "Username or Password incorrect!"
             loginStatus.className = 'red-text';
         });
+    document.getElementById('usernameInput').value = '';
     document.getElementById('passwordInput').value = '';
 }
 
