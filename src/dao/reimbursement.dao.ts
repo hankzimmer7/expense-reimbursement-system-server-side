@@ -6,11 +6,13 @@ export async function findAll(): Promise<Reimbursement[]> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type from expense_reimbursement.reimbursement as r
+            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type 
+            from expense_reimbursement.reimbursement as r
             left join expense_reimbursement.expense_user as user_author on r.author = user_author.user_id
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
             left join expense_reimbursement.reimbursement_status as status on r.status = status.status_id
-            left join expense_reimbursement.reimbursement_type as r_type on r.type = r_type.type_id;`
+            left join expense_reimbursement.reimbursement_type as r_type on r.type = r_type.type_id
+            order by date_submitted;`
         );
         return result.rows.map(reimbursement => {
             return {
@@ -35,12 +37,14 @@ export async function findByStatus(statusId: number): Promise<Reimbursement[]> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type from expense_reimbursement.reimbursement as r
+            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type 
+            from expense_reimbursement.reimbursement as r
             left join expense_reimbursement.expense_user as user_author on r.author = user_author.user_id
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
             left join expense_reimbursement.reimbursement_status as status on r.status = status.status_id
             left join expense_reimbursement.reimbursement_type as r_type on r.type = r_type.type_id
-            where r.status = $1 order by date_submitted`,
+            where r.status = $1
+            order by date_submitted`,
             [statusId]
         );
         return result.rows.map(reimbursement => {
@@ -66,12 +70,14 @@ export async function findByUser(userId: number): Promise<Reimbursement[]> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type from expense_reimbursement.reimbursement as r
+            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type
+            from expense_reimbursement.reimbursement as r
             left join expense_reimbursement.expense_user as user_author on r.author = user_author.user_id
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
             left join expense_reimbursement.reimbursement_status as status on r.status = status.status_id
             left join expense_reimbursement.reimbursement_type as r_type on r.type = r_type.type_id
-            where r.author = $1 order by date_submitted`,
+            where r.author = $1
+            order by date_submitted`,
             [userId]
         );
         return result.rows.map(reimbursement => {
@@ -97,7 +103,8 @@ export async function findById(id: number): Promise<Reimbursement> {
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
-            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type from expense_reimbursement.reimbursement as r
+            `select r.reimbursement_id, user_author.first_name as author_first_name, user_author.last_name as author_last_name, r.amount, r.date_submitted, r.date_resolved, r.description, user_resolver.first_name as resolver_first_name, user_resolver.last_name as resolver_last_name, status.status, r_type.type as type 
+            from expense_reimbursement.reimbursement as r
             left join expense_reimbursement.expense_user as user_author on r.author = user_author.user_id
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
             left join expense_reimbursement.reimbursement_status as status on r.status = status.status_id
