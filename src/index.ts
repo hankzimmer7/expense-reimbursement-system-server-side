@@ -21,6 +21,16 @@ app.use(bodyParser.json());
 //   next();
 // });
 
+app.use((req, resp, next) => {
+  (process.env.NODE_ENV === 'production')
+    ? resp.header('Access-Control-Allow-Origin', process.env.ERS_FRONTEND_URL)
+    : resp.header('Access-Control-Allow-Origin', `http://localhost:3000`);
+  resp.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  resp.header('Access-Control-Allow-Credentials', 'true');
+  resp.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  next();
+ });
+
 // Logging middleware
 app.use((req, res, next) => {
   console.log(`request was made with url: ${req.path}
