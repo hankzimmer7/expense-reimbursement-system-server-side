@@ -9,7 +9,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tslint src/**/*.ts",
     "lint:fix": "tslint src/**/*.ts --fix"
-
   },
   "repository": {
     "type": "git",
