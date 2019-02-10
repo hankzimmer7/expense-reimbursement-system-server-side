@@ -10,17 +10,6 @@ const PORT = process.env.PORT || 2000;
 // Set up body parser to convert json body to js object and attach to req
 app.use(bodyParser.json());
 
-// allow cross origins
-// app.use((req, resp, next) => {
-//   console.log(req.get('host'));
-//   (process.env.MOVIE_API_STAGE === 'prod')
-//     ? resp.header('Access-Control-Allow-Origin', process.env.DEMO_APP_URL)
-//     : resp.header('Access-Control-Allow-Origin', `${req.headers.origin}`);
-//   resp.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   resp.header('Access-Control-Allow-Credentials', 'true');
-//   next();
-// });
-
 app.use((req, resp, next) => {
   (process.env.NODE_ENV === 'production')
     ? resp.header('Access-Control-Allow-Origin', process.env.ERS_FRONTEND_URL)
