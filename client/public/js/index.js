@@ -48,6 +48,6 @@ const updateMyReimbursementsLink = () => {
     let reimbursementsLink = document.getElementById('my-reimbursements-link');
     axios.get('/login/info')
     .then((data) => {
-        reimbursementsLink.href = `/reimbursements/author/userId/${data.data.user_id}`;
+        reimbursementsLink.href = `/reimbursements/author/userId/${data.data.userId}`;
     })
 }

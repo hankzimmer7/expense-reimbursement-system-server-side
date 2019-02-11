@@ -19,13 +19,16 @@ loginRouter.post('/', (req, res) => {
             passwordCorrect = true;
             console.log(`User ${req.body.username} successfully logged in`);
             const loggedInUser = {
-              user_id: user.userId,
+              userId: user.userId,
               username: user.username,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
               role: user.role
             };
             // Attach the user to the session
             req.session.user = loggedInUser;
-            res.json(user);
+            res.json(loggedInUser);
           } else {
             console.log('password is incorrect');
           }
