@@ -60,6 +60,21 @@ reimbursementRouter.get('/:id', [
     }
   }]
 );
+// /reimbursements/nojoin/:id - find by id and don't join tables. This is used when updating reimbursements on the front end
+reimbursementRouter.get('/nojoin/:id', [
+  authManagerMiddleware,
+  async (req, res) => {
+    console.log(req.params);
+    const idParam = +req.params.id;
+    try {
+      const reimbursement = await ReimbursementDao.findByIdNoJoin(idParam);
+      res.json(reimbursement);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  }]
+);
 
 // -----------------POST routes----------------------------//
 
