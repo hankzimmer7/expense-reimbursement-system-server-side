@@ -192,7 +192,7 @@ export async function save(reimbursement: Reimbursement): Promise<Reimbursement>
 export async function update(reimbursement: Reimbursement) {
     const client = await connectionPool.connect();
     try {
-        // Get the reimbursement's current info ebfore updating
+        // Get the reimbursement's current info before updating
         const reimbursementToUpdate = await findByIdNoJoin(reimbursement.reimbursementId);
         // If a field was not provided to update, keep the old info
         if (!reimbursement.author) {reimbursement.author = reimbursementToUpdate.author; }
@@ -201,10 +201,15 @@ export async function update(reimbursement: Reimbursement) {
         if (!reimbursement.description) {reimbursement.description = reimbursementToUpdate.description; }
         if (!reimbursement.status) {reimbursement.status = reimbursementToUpdate.status; }
         if (!reimbursement.type) {reimbursement.type = reimbursementToUpdate.type; }
-        // If the status is being updated to approved or denied, add the current date as the date resolved.
+        // If the status is being updated to approved or denied, set the date resolved to the current date. If it is being updated to pending, update the date resolved to Jan 1, 1900.
         const currentDate = new Date();
-        if (reimbursement.status != 1) {
+        console.log('reimbursement dao, reimbursement.status:', reimbursement.status);
+        if (+reimbursement.status !== 1) {
+            console.log('reimbursement dao, reimbursement status is not 1');
             reimbursement.dateResolved = currentDate;
+        } else {
+            console.log('reimbursement dao, reimbursement status is 1 .Setting date to jan 1 1900');
+            reimbursement.dateResolved = new Date(1900, 0, 1);
         }
         const result = await client.query(
             `update expense_reimbursement.reimbursement set author = $2, amount = $3, date_resolved = $4, description = $5, resolver = $6, status = $7, type = $8 where reimbursement_id = $1
