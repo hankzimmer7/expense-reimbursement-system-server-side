@@ -33,6 +33,20 @@ userRouter.get('/:id', [
     }
   }]);
 
+  // /users/nojoin/:id - find by id and don't join the role - this is used on the front-end for updating the user
+userRouter.get('/nojoin/:id', [
+  authManagerMiddleware,
+  async (req, res) => {
+    const idParam = +req.params.id;
+    try {
+      const user = await UserDao.findByIdNoJoin(idParam);
+      res.json(user);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  }]);
+
   // -----------------POST routes----------------------------//
 
 // /users - add a new a user
