@@ -12,7 +12,7 @@ export async function findAll(): Promise<Reimbursement[]> {
             left join expense_reimbursement.expense_user as user_resolver on r.resolver = user_resolver.user_id
             left join expense_reimbursement.reimbursement_status as status on r.status = status.status_id
             left join expense_reimbursement.reimbursement_type as r_type on r.type = r_type.type_id
-            order by date_submitted;`
+            order by date_submitted, r.reimbursement_id;`
         );
         return result.rows.map(reimbursement => {
             return {
@@ -44,7 +44,7 @@ export async function findByStatus(statusId: number): Promise<Reimbursement[]> {
             left join expense_reimbursement.reimbursement_status as status on r.status = status.status_id
             left join expense_reimbursement.reimbursement_type as r_type on r.type = r_type.type_id
             where r.status = $1
-            order by date_submitted`,
+            order by date_submitted, r.reimbursement_id`,
             [statusId]
         );
         return result.rows.map(reimbursement => {
@@ -77,7 +77,7 @@ export async function findByUser(userId: number): Promise<Reimbursement[]> {
             left join expense_reimbursement.reimbursement_status as status on r.status = status.status_id
             left join expense_reimbursement.reimbursement_type as r_type on r.type = r_type.type_id
             where r.author = $1
-            order by date_submitted`,
+            order by date_submitted, r.reimbursement_id`,
             [userId]
         );
         return result.rows.map(reimbursement => {

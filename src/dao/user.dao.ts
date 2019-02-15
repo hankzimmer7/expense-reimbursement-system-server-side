@@ -7,7 +7,8 @@ export async function findAll(): Promise<User[]> {
     try {
         const result = await client.query(
             `select user_id, username, password, first_name, last_name, email, expense_reimbursement.expense_role.expense_role from expense_reimbursement.expense_user
-            join expense_reimbursement.expense_role on expense_reimbursement.expense_user.expense_role = expense_reimbursement.expense_role.role_id;`
+            join expense_reimbursement.expense_role on expense_reimbursement.expense_user.expense_role = expense_reimbursement.expense_role.role_id
+            order by expense_reimbursement.expense_role.expense_role, user_id;`
         );
         return result.rows.map(user => {
             return {
@@ -113,7 +114,8 @@ export async function findByName(name: string): Promise<User[]> {
             join expense_reimbursement.expense_role on expense_reimbursement.expense_user.expense_role = expense_reimbursement.expense_role.role_id
             where lower(username) like lower($1)
             or lower(first_name) like lower($1)
-            or lower(last_name) like lower($1);`,
+            or lower(last_name) like lower($1)
+            order by expense_reimbursement.expense_role.expense_role, user_id;`,
             ['%' + name + '%']
         );
         return result.rows.map(user => {
