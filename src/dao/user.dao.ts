@@ -172,7 +172,7 @@ export async function update(user: User) {
         if (!user.firstName) { user.firstName = userToUpdate.firstName; }
         if (!user.lastName) { user.lastName = userToUpdate.lastName; }
         if (!user.email) { user.email = userToUpdate.email; }
-        if (!user.role) { user.role = userToUpdate.role; }
+        if (!user.role || (+user.role === 0)) { user.role = userToUpdate.role; }
         // Update the user
         const result = await client.query(
             `update expense_reimbursement.expense_user set username = $2, password = $3, first_name = $4, last_name = $5, email = $6, expense_role = $7 where user_id = $1

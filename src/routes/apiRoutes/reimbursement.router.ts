@@ -49,7 +49,6 @@ reimbursementRouter.get('/author/userId/:userId', [
 reimbursementRouter.get('/:id', [
   authManagerMiddleware,
   async (req, res) => {
-    console.log(req.params);
     const idParam = +req.params.id;
     try {
       const reimbursement = await ReimbursementDao.findById(idParam);
@@ -64,7 +63,6 @@ reimbursementRouter.get('/:id', [
 reimbursementRouter.get('/nojoin/:id', [
   authManagerMiddleware,
   async (req, res) => {
-    console.log(req.params);
     const idParam = +req.params.id;
     try {
       const reimbursement = await ReimbursementDao.findByIdNoJoin(idParam);
