@@ -3,7 +3,6 @@ import { connectionPool } from '../util/db-connection';
 
 // Find all users, with the password field left blank
 export async function findAll(): Promise<User[]> {
-    console.log('Getting all users from db');
     const client = await connectionPool.connect();
     try {
         const result = await client.query(
@@ -105,6 +104,35 @@ export async function findByIdNoJoin(id: number): Promise<User> {
     }
 }
 
+// Find users based on the provided username, first name, or last, name
+export async function findByName(name: string): Promise<User[]> {
+    const client = await connectionPool.connect();
+    try {
+        const result = await client.query(
+            `select user_id, username, password, first_name, last_name, email, expense_reimbursement.expense_role.expense_role from expense_reimbursement.expense_user
+            join expense_reimbursement.expense_role on expense_reimbursement.expense_user.expense_role = expense_reimbursement.expense_role.role_id
+            where lower(username) like lower($1)
+            or lower(first_name) like lower($1)
+            or lower(last_name) like lower($1);`,
+            ['%' + name + '%']
+        );
+        return result.rows.map(user => {
+            return {
+                userId: user.user_id,
+                username: user.username,
+                password: '',
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+                role: user.expense_role
+            };
+        });
+
+    } finally {
+        client.release();
+    }
+}
+
 // Add a user to the database
 export async function save(user: User): Promise<User> {
     const client = await connectionPool.connect();
@@ -137,12 +165,12 @@ export async function update(user: User) {
         // Get the user's current info before updating
         const userToUpdate = await findByIdNoJoin(user.userId);
         // If a field was not provided to update, keep the old info
-        if (!user.username) {user.username = userToUpdate.username; }
-        if (!user.password) {user.password = userToUpdate.password; }
-        if (!user.firstName) {user.firstName = userToUpdate.firstName; }
-        if (!user.lastName) {user.lastName = userToUpdate.lastName; }
-        if (!user.email) {user.email = userToUpdate.email; }
-        if (!user.role) {user.role = userToUpdate.role; }
+        if (!user.username) { user.username = userToUpdate.username; }
+        if (!user.password) { user.password = userToUpdate.password; }
+        if (!user.firstName) { user.firstName = userToUpdate.firstName; }
+        if (!user.lastName) { user.lastName = userToUpdate.lastName; }
+        if (!user.email) { user.email = userToUpdate.email; }
+        if (!user.role) { user.role = userToUpdate.role; }
         // Update the user
         const result = await client.query(
             `update expense_reimbursement.expense_user set username = $2, password = $3, first_name = $4, last_name = $5, email = $6, expense_role = $7 where user_id = $1

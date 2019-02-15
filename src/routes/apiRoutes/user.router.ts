@@ -33,6 +33,20 @@ userRouter.get('/:id', [
     }
   }]);
 
+  // /users/username/:name - find by username, first name, or last name
+userRouter.get('/username/:name', [
+  authManagerMiddleware,
+  async (req, res) => {
+    const NameParam = req.params.name;
+    try {
+      const user = await UserDao.findByName(NameParam);
+      res.json(user);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  }]);
+
   // /users/nojoin/:id - find by id and don't join the role - this is used on the front-end for updating the user
 userRouter.get('/nojoin/:id', [
   authManagerMiddleware,
