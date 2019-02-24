@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 app.use((req, resp, next) => {
   (process.env.ENVIRONMENT === 'production')
-    ? resp.header('Access-Control-Allow-Origin', process.env.ERS_FRONTEND_URL) 
+    ? resp.header('Access-Control-Allow-Origin', process.env.ERS_FRONTEND_URL)
     : resp.header('Access-Control-Allow-Origin', `http://localhost:3000`);
   resp.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   resp.header('Access-Control-Allow-Credentials', 'true');
